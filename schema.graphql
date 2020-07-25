@@ -1,0 +1,28 @@
+type Owner {
+  ownerID: String! @id
+  email: String! @search(by: [regexp])
+  firstName: String
+  lastName: String
+  stores: [Store!] @hasInverse(field: owner)
+}
+
+type Store {
+  storeID: String! @id
+  name: String! @search(by: [term])
+  location: String! @search(by: [term]) 
+  owner: Owner! @hasInverse(field: stores)
+  screens: [Screen!] @hasInverse(field: displayedOn)
+}
+
+type Screen @withSubscription {
+  screenID: ID!
+  displayedOn: Store! @hasInverse(field: screens)
+  position: Position!
+}
+
+type Position {
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+}

@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  dgraph:
+    image: dgraph/standalone:master
+    volumes: 
+      - dgraph-data:/dgraph
+    ports: 
+      - 8080:8080
+      - 8000:8000
+
+  admin:
+    image: node:12
+    volumes:
+      - ./admin:/app
+    ports:
+      - 3001:3000
+    working_dir: /app
+    command: bash -c "yarn && yarn start"
+    depends_on:
+      - dgraph
+      - minio
+    stdin_open: true
+
+  client:
+    image: node:12
+    volumes:
+      - ./client:/app
+    ports:
+      - 3000:3000
+    working_dir: /app
+    command: bash -c "yarn && yarn start"
+    depends_on:
+      - dgraph
+      - minio
+    stdin_open: true
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+    volumes:
+      - minio-data:/data
+    environment:
+      - MINIO_ACCESS_KEY=testtest
+      - MINIO_SECRET_KEY=testtest
+    command: server /data
+
+volumes:
+  dgraph-data:
+  minio-data:
