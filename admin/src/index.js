@@ -6,11 +6,18 @@ import * as serviceWorker from './serviceWorker'
 import { ChakraProvider, CSSReset } from '@chakra-ui/core'
 import theme from '@chakra-ui/theme'
 
+import { ApolloProvider } from '@apollo/client'
+import client from './apollo/client'
+
+import './index.css'
+
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <CSSReset />
-      <App />
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')
